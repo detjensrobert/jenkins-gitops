@@ -179,45 +179,6 @@ jenkins:
                   useInstanceProfileForCredentials: false
                   sshKeysCredentialsId: "opensearch-ec2-key"
                   templates:
-                    - ami: "ami-01f420019462c36e2"
-                      amiType:
-                        unixData:
-                          sshPort: "22"
-                      associatePublicIp: false
-                      connectBySSHProcess: false
-                      connectionStrategy: PRIVATE_IP
-                      customDeviceMapping: "/dev/xvda=:300:true:::encrypted"
-                      deleteRootOnTermination: true
-                      description: "Jenkins-Agent-AL2023-X64-c5.4xlarge"
-                      ebsEncryptRootVolume: ENCRYPTED
-                      ebsOptimized: false
-                      hostKeyVerificationStrategy: OFF
-                      idleTerminationMinutes: "60"
-                      initScript: >-
-                        sudo dnf clean all && sudo rm -rf /var/cache/dnf &&
-                        sudo dnf repolist && sudo dnf update --releasever=latest
-                        --skip-broken --exclude=openssh* --exclude=docker*
-                        --exclude=gh* --exclude=openssl* -y && docker ps
-                      labelString: "Jenkins-Agent-AL2023-X64-c5.4xlarge-Single-Host"
-                      launchTimeoutStr: "300"
-                      maxTotalUses: 10
-                      metadataEndpointEnabled: true
-                      metadataHopsLimit: "2"
-                      metadataTokensRequired: true
-                      minimumNumberOfInstances: 0
-                      minimumNumberOfSpareInstances: 1
-                      mode: EXCLUSIVE
-                      monitoring: false
-                      numExecutors: "1"
-                      remoteAdmin: "ec2-user"
-                      remoteFS: "/var/jenkins"
-                      securityGroups: "jenkins-worker"
-                      subnetId: "subnet-04399db8294cd0293 subnet-0ef5970bb206ba8d6 subnet-0134f063a963ef06e"
-                      stopOnTerminate: false
-                      t2Unlimited: false
-                      tenancy: Default
-                      type: "c5.4xlarge"
-                      useEphemeralDevices: false
                     - ami: "ami-0a0054390037a45f4"
                       amiType:
                         unixData:
@@ -285,7 +246,7 @@ jenkins:
                                 value: "/usr/lib/jvm/temurin-24-jdk-amd64"
                               - key: JAVA25_HOME
                                 value: "/usr/lib/jvm/temurin-25-jdk-amd64"
-                      iamInstanceProfile: "arn:aws:iam::156041419073:role/opensearch-jenkins-production-agent-node-role"
+                      iamInstanceProfile: "arn:aws:iam::156041419073:instance-profile/opensearch-jenkins-production-agent-node-role"
                     - ami: "ami-057958fcf37e192f1"
                       amiType:
                         unixData:
@@ -329,7 +290,7 @@ jenkins:
                           value: "Jenkins-Prod/AgentNode/Jenkins-Agent-AL2023-X64-M54xlarge-Docker-Host"
                         - name: type
                           value: "jenkinsAgentNode-Jenkins-Agent-AL2023-X64-M54xlarge-Docker-Host"
-                      iamInstanceProfile: "arn:aws:iam::156041419073:role/opensearch-jenkins-production-agent-node-role"
+                      iamInstanceProfile: "arn:aws:iam::156041419073:instance-profile/opensearch-jenkins-production-agent-node-role"
                     - ami: "ami-064a204f1888da70b"
                       amiType:
                         unixData:
@@ -373,7 +334,7 @@ jenkins:
                           value: "Jenkins-Prod/AgentNode/Jenkins-Agent-AL2023-Arm64-M6g4xlarge-Docker-Host"
                         - name: type
                           value: "jenkinsAgentNode-Jenkins-Agent-AL2023-Arm64-M6g4xlarge-Docker-Host"
-                      iamInstanceProfile: "arn:aws:iam::156041419073:role/opensearch-jenkins-production-agent-node-role"
+                      iamInstanceProfile: "arn:aws:iam::156041419073:instance-profile/opensearch-jenkins-production-agent-node-role"
 
         credentials-config: |
           credentials:
