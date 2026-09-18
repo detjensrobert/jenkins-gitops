@@ -2529,10 +2529,10 @@ kubectl port-forward svc/jenkins -n jenkins-staging 8080:8080
 
 ```bash
 # Check ingress controller pods
-kubectl get pods -n ingress-nginx
+kubectl get pods --namespace ingress
 
 # Check ingress controller logs
-kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller
+kubectl logs --namespace ingress deployments/traefik
 ```
 
 2. **Verify DNS:**
