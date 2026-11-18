@@ -2,7 +2,7 @@ FROM jenkins/jenkins:2.580.2-lts-jdk21
 
 # Set maintainer and disable setup wizard
 LABEL maintainer="OpenSearch Staging Environment"
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false -XX:-UseBASE64Intrinsics"
 
 # Copy the plugins.txt file
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
