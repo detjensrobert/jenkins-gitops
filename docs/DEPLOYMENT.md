@@ -2541,7 +2541,7 @@ The public hostnames (`jenkins.opensearch.org`,
 `jenkins-staging.opensearch.org`) are CNAMEs to the cluster hostnames
 (`jenkins.opensearch.cluster.linuxfound.info`,
 `jenkins-stag.opensearch.cluster.linuxfound.info`) that are managed by the
-cluster. 
+cluster.
 
 ```bash
 # Check DNS resolution (vanity CNAME, then the external-dns managed record)
