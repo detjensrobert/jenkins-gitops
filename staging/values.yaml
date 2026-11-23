@@ -632,9 +632,9 @@ jenkins:
     - name: JCASC_SILO
       value: "staging"
     - name: JCASC_JENKINS_URL
-      value: "https://jenkins-stag.opensearch.cluster.linuxfound.info/"
+      value: "https://jenkins-staging.opensearch.org/"
     - name: JENKINS_URL
-      value: "https://jenkins-stag.opensearch.cluster.linuxfound.info/"
+      value: "https://jenkins-staging.opensearch.org/"
     - name: JCASC_LOCATION_URL
       value: ""
     - name: JCASC_LOCATION_ADMINADDRESS
@@ -724,12 +724,16 @@ jenkins:
       ingressClassName: traefik
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt
-      hostName: jenkins-stag.opensearch.cluster.linuxfound.info
+        # jenkins-staging.opensearch.org is a CNAME to the cluster domain below.
+        # external-dns only manages the cluster record, not the vanity host.
+        external-dns.alpha.kubernetes.io/hostname: jenkins-stag.opensearch.cluster.linuxfound.info
+        external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
+      hostName: jenkins-staging.opensearch.org
       path: /
       tls:
       - secretName: jenkins-staging-tls
         hosts:
-        - jenkins-stag.opensearch.cluster.linuxfound.info
+        - jenkins-staging.opensearch.org
 
   persistence:
     enabled: true
