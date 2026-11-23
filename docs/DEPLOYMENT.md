@@ -125,8 +125,8 @@ kubectl logs jenkins-0 -n jenkins-staging -c jenkins --tail=50 | grep -i error
 
 Jenkins uses SAML SSO via Linux Foundation identity provider:
 
-- **Staging:** `https://jenkins-stag.opensearch.cluster.linuxfound.info`
-- **Production:** `https://jenkins.opensearch.cluster.linuxfound.info`
+- **Staging:** `https://jenkins-staging.opensearch.org`
+- **Production:** `https://jenkins.opensearch.org`
 
 **Authentication:**
 1. Navigate to Jenkins URL
@@ -520,8 +520,8 @@ kubectl get ingress -n jenkins-prod
 ```
 
 **Access Jenkins via SSO:**
-- Staging: `https://jenkins-stag.opensearch.cluster.linuxfound.info`
-- Production: `https://jenkins.opensearch.cluster.linuxfound.info`
+- Staging: `https://jenkins-staging.opensearch.org`
+- Production: `https://jenkins.opensearch.org`
 
 ### Bootstrap Verification Checklist
 
@@ -803,7 +803,7 @@ kubectl get pods -n jenkins-staging
 kubectl logs -n jenkins-staging -l app.kubernetes.io/component=jenkins-controller --tail=100
 
 # Verify Jenkins UI loads
-curl -I https://jenkins-stag.opensearch.cluster.linuxfound.info
+curl -I https://jenkins-staging.opensearch.org
 
 # Test Jenkins functionality
 # - Login with admin credentials
@@ -935,7 +935,7 @@ kubectl get statefulset jenkins -n jenkins-prod -o jsonpath='{.spec.template.spe
 kubectl get pods -n jenkins-prod -o wide
 
 # Check Jenkins health endpoint
-curl -s https://jenkins.opensearch.cluster.linuxfound.info/login | grep -q "Jenkins" && echo "OK"
+curl -s https://jenkins.opensearch.org/login | grep -q "Jenkins" && echo "OK"
 
 # Verify plugins loaded
 # Login to UI and check Manage Jenkins > Manage Plugins
@@ -1093,7 +1093,7 @@ kubectl exec -n jenkins-staging jenkins-0 -c jenkins -- df -h /var/jenkins_home
 
 ```bash
 # Check Jenkins is responding (no auth needed)
-curl -I https://jenkins-stag.opensearch.cluster.linuxfound.info
+curl -I https://jenkins-staging.opensearch.org
 
 # Verify ingress and TLS
 kubectl get ingress -n jenkins-staging jenkins -o yaml
@@ -1268,7 +1268,7 @@ kubectl rollout status statefulset/jenkins -n jenkins-prod
 kubectl get statefulset jenkins -n jenkins-prod -o jsonpath='{.spec.template.spec.containers[0].image}'
 
 # Check Jenkins accessibility
-curl -I https://jenkins.opensearch.cluster.linuxfound.info
+curl -I https://jenkins.opensearch.org
 
 # Verify functionality restored
 # - Login to UI
@@ -1407,7 +1407,7 @@ kubectl get pods -n jenkins-prod -w
 kubectl get statefulset jenkins -n jenkins-prod -o jsonpath='{.spec.template.spec.containers[0].image}'
 
 # Test Jenkins access
-curl -I https://jenkins.opensearch.cluster.linuxfound.info
+curl -I https://jenkins.opensearch.org
 ```
 
 6. **MANDATORY: Reconcile Git Within 1 Hour**
@@ -1720,7 +1720,7 @@ controller:
   containerEnv:
     # Existing variables...
     - name: JCASC_JENKINS_URL
-      value: "https://jenkins-stag.opensearch.cluster.linuxfound.info"
+      value: "https://jenkins-staging.opensearch.org"
 
     # New variable
     - name: JCASC_NEW_FEATURE_URL
@@ -2427,7 +2427,7 @@ kubectl rollout restart statefulset/jenkins -n jenkins-staging
 
 ```bash
 # Reload via API (if Jenkins is running)
-curl -X POST -u admin:$PASSWORD https://jenkins-stag.opensearch.cluster.linuxfound.info/reload-configuration-as-code/
+curl -X POST -u admin:$PASSWORD https://jenkins-staging.opensearch.org/reload-configuration-as-code/
 ```
 
 **When to Escalate:**
@@ -2537,12 +2537,19 @@ kubectl logs --namespace ingress deployments/traefik
 
 2. **Verify DNS:**
 
+The public hostnames (`jenkins.opensearch.org`,
+`jenkins-staging.opensearch.org`) are CNAMEs to the cluster hostnames
+(`jenkins.opensearch.cluster.linuxfound.info`,
+`jenkins-stag.opensearch.cluster.linuxfound.info`) that are managed by the
+cluster. 
+
 ```bash
-# Check DNS resolution
+# Check DNS resolution (vanity CNAME, then the external-dns managed record)
+nslookup jenkins-staging.opensearch.org
 nslookup jenkins-stag.opensearch.cluster.linuxfound.info
 
 # Verify certificate (if HTTPS)
-openssl s_client -connect jenkins-stag.opensearch.cluster.linuxfound.info:443 -servername jenkins-stag.opensearch.cluster.linuxfound.info
+openssl s_client -connect jenkins-staging.opensearch.org:443 -servername jenkins-staging.opensearch.org
 ```
 
 3. **Check Service:**
@@ -3138,7 +3145,7 @@ Save output to incident tracking system or compliance dashboard.
 
 | Variable | Purpose | Example Value |
 |----------|---------|---------------|
-| `JCASC_JENKINS_URL` | Jenkins external URL | `https://jenkins-stag.opensearch.cluster.linuxfound.info` |
+| `JCASC_JENKINS_URL` | Jenkins external URL | `https://jenkins-staging.opensearch.org` |
 | `JCASC_SILO` | Environment identifier | `staging`, `production` |
 | `JCASC_BUILD_TIMEOUT` | Default job timeout | `60` (minutes) |
 | `SAML_METADATA_URL` | SAML IdP metadata URL | From External Secrets |
