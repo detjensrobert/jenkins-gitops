@@ -594,7 +594,7 @@ jenkins:
               configs:
                 - name: "opensearch-project"
                   credentialsId: "${GITHUB_CREDENTIALS_ID}"
-              hookUrl: "${JENKINS_URL}/github-webhook/"
+              hookUrl: "${JENKINS_URL}github-webhook/"
 
         tool-config: |
           tool:
